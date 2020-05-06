@@ -9,15 +9,23 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class Emp {	
 	private Long uuid;//编号
 	private String username;//登陆名
-	//不转换json字符串
+	//不转换json字符串，就可以不显示密码了
 	@JSONField(serialize=false)
 	private String pwd;//登陆密码
+	
 	private String name;//真实姓名
 	private Long gender;//性别
 	private String email;//邮件地址
 	private String tele;//联系电话
 	private String address;//联系地址
 	private java.util.Date birthday;//出生年月日
+//	private Long depuuid;//部门编号
+//	public Long getDepuuid() {
+//		return depuuid;
+//	}
+//	public void setDepuuid(Long depuuid) {
+//		this.depuuid = depuuid;
+//	}
 	private Dep dep;//部门
 
 	public Dep getDep() {

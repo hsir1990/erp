@@ -1,4 +1,7 @@
 package cn.itcast.erp.entity;
+
+import java.util.List;
+
 /**
  * 订单实体类
  * @author Administrator *
@@ -18,7 +21,16 @@ public class Orders {
 	private Double totalmoney;//合计金额
 	private String state;//采购: 0:未审核 1:已审核, 2:已确认, 3:已入库；销售：0:未出库 1:已出库
 	private Long waybillsn;//运单号
+	
+	//订单明细
+	private List<Orderdetail> orderDetails;
 
+	public List<Orderdetail> getOrderDetails() {
+		return orderDetails;
+	}
+	public void setOrderDetails(List<Orderdetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
 	public Long getUuid() {		
 		return uuid;
 	}

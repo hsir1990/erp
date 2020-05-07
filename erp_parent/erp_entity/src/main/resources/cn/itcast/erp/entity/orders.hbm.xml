@@ -21,5 +21,11 @@
         <property name="state" /> 
         <property name="waybillsn" /> 
  
+ 		<!-- cascade="save-update"级联更新    inverse="true"放弃管理外键    -->
+ 		<bag name="orderDetails" cascade="save-update" inverse="true">
+ 			<key column="orderuuid"></key>
+ 			<one-to-many class="cn.itcast.erp.entity.Orderdetail"/>
+ 		</bag>
+ 		
     </class>
 </hibernate-mapping>

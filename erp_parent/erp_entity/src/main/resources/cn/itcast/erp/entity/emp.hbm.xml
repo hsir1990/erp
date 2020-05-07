@@ -8,6 +8,7 @@
         </id>
 
         <property name="username" /> 
+        <!-- pwd不更新 -->
         <property name="pwd" update="false" /> 
         <property name="name" /> 
         <property name="gender" /> 

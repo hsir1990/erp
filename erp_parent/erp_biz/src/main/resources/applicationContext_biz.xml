@@ -35,6 +35,8 @@
 	<!-- 菜单 -->
 	<bean id="menuBiz" class="cn.itcast.erp.biz.impl.MenuBiz">
 		<property name="menuDao" ref="menuDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
 	</bean>
 	<!-- 订单明细 -->
 	<bean id="orderdetailBiz" class="cn.itcast.erp.biz.impl.OrderdetailBiz">

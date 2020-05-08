@@ -7,5 +7,5 @@ import cn.itcast.erp.entity.Orderdetail;
  *
  */
 public interface IOrderdetailDao extends IBaseDao<Orderdetail>{
-
+	
 }

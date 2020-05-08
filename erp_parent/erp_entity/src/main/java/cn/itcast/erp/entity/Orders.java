@@ -7,6 +7,17 @@ import java.util.List;
  * @author Administrator *
  */
 public class Orders {	
+	
+	public static final String STATE_CREATE = "0";//未审核
+	public static final String STATE_CHECK = "1";//已审核
+	public static final String STATE_START = "2";//已确认
+	public static final String STATE_END = "3";//未确认
+	
+	
+	public static final String TYPE_IN = "1";//采购订单
+	public static final String TYPE_OUT = "2";//销售订单
+	
+	
 	private Long uuid;//编号
 	private java.util.Date createtime;//生成日期
 	private java.util.Date checktime;//审核日期
@@ -14,10 +25,15 @@ public class Orders {
 	private java.util.Date endtime;//入库或出库日期
 	private String type;//1:采购 2:销售
 	private Long creater;//下单员
+	private String createrName;//下单员名称
 	private Long checker;//审核员
+	private String checkerName;//审核员名称 
 	private Long starter;//采购员
+	private String starterName;//采购员名称
 	private Long ender;//库管员
+	private String enderName;//库管员名称
 	private Long supplieruuid;//供应商或客户
+	private String supplierName;//供应商或客户的名称
 	private Double totalmoney;//合计金额
 	private String state;//采购: 0:未审核 1:已审核, 2:已确认, 3:已入库；销售：0:未出库 1:已出库
 	private Long waybillsn;//运单号
@@ -27,6 +43,36 @@ public class Orders {
 
 	public List<Orderdetail> getOrderDetails() {
 		return orderDetails;
+	}
+	public String getSupplierName() {
+		return supplierName;
+	}
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+	public String getCreaterName() {
+		return createrName;
+	}
+	public void setCreaterName(String createrName) {
+		this.createrName = createrName;
+	}
+	public String getCheckerName() {
+		return checkerName;
+	}
+	public void setCheckerName(String checkerName) {
+		this.checkerName = checkerName;
+	}
+	public String getStarterName() {
+		return starterName;
+	}
+	public void setStarterName(String starterName) {
+		this.starterName = starterName;
+	}
+	public String getEnderName() {
+		return enderName;
+	}
+	public void setEnderName(String enderName) {
+		this.enderName = enderName;
 	}
 	public void setOrderDetails(List<Orderdetail> orderDetails) {
 		this.orderDetails = orderDetails;

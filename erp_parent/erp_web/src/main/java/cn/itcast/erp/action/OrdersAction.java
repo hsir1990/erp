@@ -4,8 +4,10 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 
 import cn.itcast.erp.biz.IOrdersBiz;
+import cn.itcast.erp.entity.Emp;
 import cn.itcast.erp.entity.Orderdetail;
 import cn.itcast.erp.entity.Orders;
+import cn.itcast.erp.exception.ErpException;
 
 /**
  * 订单Action 
@@ -30,10 +32,71 @@ public class OrdersAction extends BaseAction<Orders> {
 		this.json = json;
 	}
 	
+	//添加订单 
 	public void add() {
+		Emp loginUser = getLoginUser();
+		if(null == loginUser) {
+			//用户没有登录或者session已经失效
+			ajaxReturn(false, "亲，您还没有登录");
+			return ;
+		}
+		
 		System.out.println(json);
-		List<Orderdetail> detailList = JSON.parseArray(json, Orderdetail.class);
-		System.out.println(detailList.size());
+		try {
+			Orders orders = getT();//T是属性驱动对应过来的
+			
+			//订单创建者
+			orders.setCreater(loginUser.getUuid());
+			List<Orderdetail> detailList = JSON.parseArray(json, Orderdetail.class);
+			//订单明细
+			orders.setOrderDetails(detailList);
+			System.out.println(detailList.size());
+			ordersBiz.add(orders);
+			ajaxReturn(true, "添加订单成功");
+		} catch (Exception e) {
+			ajaxReturn(false, "添加订单失败");
+			e.printStackTrace();
+		}
 	}
-
+	
+	//采购订单审核
+	public void doCheck() {
+		//获取当前登陆用户
+		Emp loginUser = getLoginUser();
+		if(null == loginUser) {
+			//用户没有登录或者session已经失效
+			ajaxReturn(false, "亲，您还没有登录");
+			return ;
+		}
+		
+		try {
+			ordersBiz.doCheck(getId(), loginUser.getUuid());
+			ajaxReturn(true, "审核成功");
+		}catch(ErpException e) {
+			ajaxReturn(false, e.getMessage());
+		} catch (Exception e) {
+			ajaxReturn(false, "审核失败");
+			e.printStackTrace();
+		}
+	}
+	//采购订单确认
+	public void doStart() {
+		//获取当前登陆用户
+		Emp loginUser = getLoginUser();
+		if(null == loginUser) {
+			//用户没有登录或者session已经失效
+			ajaxReturn(false, "亲，您还没有登录");
+			return ;
+		}
+		
+		try {
+			ordersBiz.doStart(getId(), loginUser.getUuid());
+			ajaxReturn(true, "确认成功");
+		}catch(ErpException e) {
+			ajaxReturn(false, e.getMessage());
+		} catch (Exception e) {
+			ajaxReturn(false, "确认失败");
+			e.printStackTrace();
+		}
+	}
 }

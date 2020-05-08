@@ -21,11 +21,13 @@ public class OrdersDao extends BaseDao<Orders> implements IOrdersDao {
 	public DetachedCriteria getDetachedCriteria(Orders orders1,Orders orders2,Object param){
 		DetachedCriteria dc=DetachedCriteria.forClass(Orders.class);
 		if(orders1!=null){
+			//根据订单类型查询
 			if(null != orders1.getType() && orders1.getType().trim().length()>0){
-				dc.add(Restrictions.like("type", orders1.getType(), MatchMode.ANYWHERE));
+				dc.add(Restrictions.eq("type", orders1.getType()));
 			}
+			//根据订单状态查询
 			if(null != orders1.getState() && orders1.getState().trim().length()>0){
-				dc.add(Restrictions.like("state", orders1.getState(), MatchMode.ANYWHERE));
+				dc.add(Restrictions.eq("state", orders1.getState()));
 			}
 
 		}

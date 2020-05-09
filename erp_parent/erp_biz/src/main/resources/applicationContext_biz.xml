@@ -35,8 +35,6 @@
 	<!-- 菜单 -->
 	<bean id="menuBiz" class="cn.itcast.erp.biz.impl.MenuBiz">
 		<property name="menuDao" ref="menuDao"></property>
-		<property name="empDao" ref="empDao"></property>
-		<property name="supplierDao" ref="supplierDao"></property>
 	</bean>
 	<!-- 订单明细 -->
 	<bean id="orderdetailBiz" class="cn.itcast.erp.biz.impl.OrderdetailBiz">
@@ -45,6 +43,8 @@
 	<!-- 订单 -->
 	<bean id="ordersBiz" class="cn.itcast.erp.biz.impl.OrdersBiz">
 		<property name="ordersDao" ref="ordersDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
 	</bean>
 	<!-- 退货订单明细 -->
 	<bean id="returnorderdetailBiz" class="cn.itcast.erp.biz.impl.ReturnorderdetailBiz">

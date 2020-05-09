@@ -4,6 +4,10 @@ package cn.itcast.erp.entity;
  * @author Administrator *
  */
 public class Storeoper {	
+	
+	public static final String TYPE_IN = "1";//1：入库
+	public static final String TYPE_OUT = "2";//2：出库
+	
 	private Long uuid;//编号
 	private Long empuuid;//操作员工编号
 	private java.util.Date opertime;//操作日期

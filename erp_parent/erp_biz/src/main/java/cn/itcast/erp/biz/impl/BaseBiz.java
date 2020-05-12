@@ -1,8 +1,14 @@
 package cn.itcast.erp.biz.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.itcast.erp.biz.IBaseBiz;
+import cn.itcast.erp.biz.IEmpBiz;
 import cn.itcast.erp.dao.IBaseDao;
+import cn.itcast.erp.dao.IEmpDao;
+import cn.itcast.erp.dao.IGoodsDao;
+import cn.itcast.erp.dao.IStoreDao;
 /**
  * 通用业务逻辑实现类
  * @author Administrator
@@ -76,6 +82,47 @@ public class BaseBiz<T> implements IBaseBiz<T> {
 	 */
 	public void update(T t){
 		baseDao.update(t);
+	}
+	
+	public String getGoodsName(Long uuid, Map<Long, String> goodsNameMap, IGoodsDao goodsDao) {
+		if(null == uuid) {
+			return null;
+		}
+		//从缓存中根据商品编号取出商品名称
+		String goodsName = goodsNameMap.get(uuid);
+		if(null == goodsName) {
+			//如果没有找到商品的名称，则进行数据库查找
+//			goodsName = ((IGoodsDao)baseDao).get(uuid).getName();
+			goodsName = goodsDao.get(uuid).getName();
+			//存入缓存中
+			goodsNameMap.put(uuid, goodsName);
+		}
+		return goodsName;
+	}
+	public String getStoreName(Long uuid, Map<Long, String> storeNameMap, IStoreDao storeDao) {
+		if(null == uuid) {
+			return null;
+		}
+		String storeName = storeNameMap.get(uuid);
+		if(null == storeName) {
+			storeName = storeDao.get(uuid).getName();
+			storeNameMap.put(uuid, storeName);
+		}
+		return storeName;
+	}
+	//获取员工名称    uuid 员工编号 empNameMap缓存员工编号与员工的名称 return返回员工的名称
+	public String getEmpName(Long uuid, Map<Long, String> empNameMap,IEmpDao empDao) {
+		if(null == uuid) {
+			return null;
+		}
+		String empName = empNameMap.get(uuid);
+		if(null == empName) {
+			//如果没有找到员工的名称，则进行数据库查询
+			empName = empDao.get(uuid).getName();
+			//存入缓存中
+			empNameMap.put(uuid, empName);
+		}
+		return empName;
 	}
 
 }

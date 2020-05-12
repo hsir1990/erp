@@ -31,6 +31,7 @@ public class StoredetailDao extends BaseDao<Storedetail> implements IStoredetail
 			}
 		}
 		return dc;
+		
 	}
 
 }

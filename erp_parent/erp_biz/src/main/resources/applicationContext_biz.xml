@@ -39,6 +39,8 @@
 	<!-- 订单明细 -->
 	<bean id="orderdetailBiz" class="cn.itcast.erp.biz.impl.OrderdetailBiz">
 		<property name="orderdetailDao" ref="orderdetailDao"></property>
+		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="storeoperDao" ref="storeoperDao"></property>
 	</bean>
 	<!-- 订单 -->
 	<bean id="ordersBiz" class="cn.itcast.erp.biz.impl.OrdersBiz">
@@ -65,10 +67,15 @@
 	<!-- 仓库库存 -->
 	<bean id="storedetailBiz" class="cn.itcast.erp.biz.impl.StoredetailBiz">
 		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="storeDao" ref="storeDao"></property>
 	</bean>
 	<!-- 仓库操作记录 -->
 	<bean id="storeoperBiz" class="cn.itcast.erp.biz.impl.StoreoperBiz">
 		<property name="storeoperDao" ref="storeoperDao"></property>
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="storeDao" ref="storeDao"></property>
+		<property name="empDao" ref="empDao"></property>
 	</bean>
 	<!-- 供应商 -->
 	<bean id="supplierBiz" class="cn.itcast.erp.biz.impl.SupplierBiz">

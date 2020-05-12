@@ -13,6 +13,7 @@
 <script type="text/javascript" src="ui/date.js"></script>
 <script type="text/javascript" src="ui/request.js"></script>
 <script type="text/javascript" src="js/orders.js"></script>
+<script type="text/javascript" src="js/orders_add.js"></script>
 </head>
 <body>
 <table id="grid"></table>
@@ -77,6 +78,15 @@
 			</tr>
 		</table>
 	</form>
+</div>
+
+<!-- 增加订单的窗口 -->
+<div id="addOrdersDlg" style="padding:2px;">
+	<form id="orderForm">
+		<span id="addOrdersSupplier"></span>：<input id="supplier" name="t.supplieruuid" >
+	<div style="height:2px;"></div>
+	</form>
+	<table id="ordersgrid"></table>
 </div>
 </body>
 </html>

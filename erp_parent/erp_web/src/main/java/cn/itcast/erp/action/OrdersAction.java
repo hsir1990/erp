@@ -90,6 +90,7 @@ public class OrdersAction extends BaseAction<Orders> {
 		}
 		
 		try {
+			//调用审核业务
 			ordersBiz.doStart(getId(), loginUser.getUuid());
 			ajaxReturn(true, "确认成功");
 		}catch(ErpException e) {
@@ -98,5 +99,23 @@ public class OrdersAction extends BaseAction<Orders> {
 			ajaxReturn(false, "确认失败");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void myListByPage() {
+		if(null == getT1()) {
+			 //构建查询条件
+			setT1(new Orders());
+		}
+		
+		Emp loginUser = getLoginUser();
+		
+		//登录用户的编号查询
+		getT1().setCreater(loginUser.getUuid());
+		
+		super.listByPage();
+		
 	}
 }

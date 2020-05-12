@@ -6,8 +6,6 @@ import cn.itcast.erp.biz.IOrderdetailBiz;
 import cn.itcast.erp.dao.IOrderdetailDao;
 import cn.itcast.erp.dao.IStoredetailDao;
 import cn.itcast.erp.dao.IStoreoperDao;
-import cn.itcast.erp.dao.impl.StoredetailDao;
-import cn.itcast.erp.dao.impl.StoreoperDao;
 import cn.itcast.erp.entity.Orderdetail;
 import cn.itcast.erp.entity.Orders;
 import cn.itcast.erp.entity.Storedetail;
@@ -20,7 +18,7 @@ import cn.itcast.erp.exception.ErpException;
  */
 public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetailBiz {
 
-	private IOrderdetailDao orderdetailDao;
+	
 	private IStoredetailDao storedetailDao;
 	private IStoreoperDao storeoperDao;
 	
@@ -30,6 +28,8 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 	public void setStoreoperDao(IStoreoperDao storeoperDao) {
 		this.storeoperDao = storeoperDao;
 	}
+	
+	private IOrderdetailDao orderdetailDao;
 	public void setOrderdetailDao(IOrderdetailDao orderdetailDao) {
 		this.orderdetailDao = orderdetailDao;
 		super.setBaseDao(this.orderdetailDao);
@@ -63,6 +63,7 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 		Storedetail storedetail = new Storedetail();
 		storedetail.setGoodsuuid(detail.getGoodsuuid());
 		storedetail.setStoreuuid(storeuuid);
+
 		//2.通过查询，检查是否存在库存信息
 		List<Storedetail> storeList = storedetailDao.getList(storedetail, null, null);
 		if(storeList.size()>0) {
@@ -77,7 +78,6 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 			storedetail.setNum(detail.getNum());
 			storedetailDao.add(storedetail);
 		}
-		
 		
 		//第三大部
 		//构建操作记录
@@ -108,5 +108,76 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 		}
 		
 	}
-	
+	/**
+	 *  出库
+	 * @param uuid 明细编号
+	 * @param storeuuid 仓库编号
+	 * @param empuuid 库管员编号
+	 */
+	public void doOutStore(Long uuid, Long storeuuid, Long empuuid) {
+		//第一大步
+		//1.获取订单明细
+		Orderdetail detail = orderdetailDao.get(uuid);
+		//2.判断明细的状态，一定是未出库的
+		if(!Orderdetail.STATE_NOT_OUT.equals(detail.getState())) {
+			throw new ErpException("亲，该明细已经出库，不能重复出库");
+		}
+		//3.修改状体为出库
+		detail.setState(Orderdetail.STATE_IN);
+		//4.出库时间
+		detail.setEndtime(new Date());
+		//5.库管理员
+		detail.setEnder(empuuid);
+		//6.从哪个仓库出
+		detail.setStoreuuid(storeuuid);
+		
+		
+		//第二大步
+		//1.构建查询的条件
+		Storedetail storedetail = new Storedetail();
+		storedetail.setGoodsuuid(detail.getGoodsuuid());
+		storedetail.setStoreuuid(storeuuid);
+
+		//2.通过查询，检查是否存在库存信息
+		List<Storedetail> storeList = storedetailDao.getList(storedetail, null, null);
+		if(storeList.size()>0) {
+			//存在的话，则应该减去它的数量
+			Storedetail sd = storeList.get(0);
+			sd.setNum(sd.getNum() - detail.getNum());
+			if(sd.getNum() < 0) {
+				throw new ErpException("库存不足");
+			}
+		}else {
+			throw new ErpException("库存不足");
+		}
+		
+		//第三大部
+		//构建操作记录
+		Storeoper log = new Storeoper();
+		log.setEmpuuid(empuuid);
+		log.setGoodsuuid(detail.getGoodsuuid());
+		log.setNum(detail.getNum());
+		log.setOpertime(detail.getEndtime());
+		log.setStoreuuid(storeuuid);
+		log.setType(Storeoper.TYPE_OUT);
+		//保存到数据库中
+		storeoperDao.add(log);
+		
+		//第四大部
+		//1查询订单下是否还存在状态为0的明细
+		//2构建查询条件
+		Orderdetail queryParam = new Orderdetail();
+		Orders orders = detail.getOrders();
+		queryParam.setOrders(orders);
+		queryParam.setState(Orderdetail.STATE_NOT_OUT);
+		//3调用getCount方法，来计算是否存在状态为0的明细
+		long count = orderdetailDao.getCount(queryParam, null, null);
+		if(count == 0) {
+			//4所有的明细都已经出库了
+			orders.setState(Orders.STATE_OUT);
+			orders.setEndtime(detail.getEndtime());
+			orders.setEnder(empuuid);
+		}
+		
+	}
 }

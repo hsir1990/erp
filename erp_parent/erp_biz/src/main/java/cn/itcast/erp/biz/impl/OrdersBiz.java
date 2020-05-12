@@ -38,8 +38,8 @@ public class OrdersBiz extends BaseBiz<Orders> implements IOrdersBiz {
 	public void add(Orders orders) {
 		//1设置订单的状态
 		orders.setState(Orders.STATE_CREATE);
-		//2订单类型
-		orders.setType(Orders.TYPE_IN);
+//		//2订单类型
+//		orders.setType(Orders.TYPE_IN);
 		//3下单时间
 		orders.setCreatetime(new Date());
 		//4合计金额
@@ -153,7 +153,7 @@ public class OrdersBiz extends BaseBiz<Orders> implements IOrdersBiz {
 			throw new ErpException("亲，该订单已经确认过了");
 		}
 		//1.修改订单
-		orders.setState(Orders.STATE_CHECK);
+		orders.setState(Orders.STATE_START);
 		//2确认时间
 		orders.setStarttime(new Date());
 		//3确认人

@@ -6,6 +6,15 @@ import cn.itcast.erp.entity.Storedetail;
  *
  */
 public interface IStoredetailBiz extends IBaseBiz<Storedetail>{
-
+	/**
+	 * 获取库存预警列表
+	 * @return
+	 */
+//	List<Storealert> getStorealertList();
+	
+	/**
+	 * 发送库存预警邮件
+	 */
+	void sendStorealertMail();
 }
 

@@ -1,26 +1,29 @@
-<!-- <?xml version="1.0" encoding="utf-8"?>
+<!-- 建立的是视图 -->
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cn.itcast.erp.entity.Storealert" table="storealert" >
+    <class name="cn.itcast.erp.entity.Storealert" table="view_storesss" >
+        <id name="uuid" />
+        <property name="name" /> 
+        <property name="storenum" /> 
+        <property name="outnum" /> 
+    </class>
+</hibernate-mapping>
+
+<!-- 
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="cn.itcast.erp.entity.Storealert" table="view_storesss" >
         <id name="uuid" >
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator"> <param name="sequence_name">storealert_seq</param> </generator>
         </id>
+
         <property name="name" /> 
         <property name="storenum" /> 
         <property name="outnum" /> 
  
     </class>
 </hibernate-mapping> -->
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping>
-    <class name="cn.itcast.erp.entity.Storealert" table="VIEW_STOREALERT" >
-        <id name="uuid" >
-        </id>
-        <property name="name" /> 
-        <property name="storenum" /> 
-        <property name="outnum" /> 
-    </class>
-</hibernate-mapping>

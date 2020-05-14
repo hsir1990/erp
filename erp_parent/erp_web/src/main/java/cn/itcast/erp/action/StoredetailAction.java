@@ -15,5 +15,10 @@ public class StoredetailAction extends BaseAction<Storedetail> {
 		this.storedetailBiz = storedetailBiz;
 		super.setBaseBiz(this.storedetailBiz);
 	}
+	
+	public void storealertList() {
+//		List<Storealert> storealertList = storedetailBiz.getStorealertList();
+//		write(JSON.toJSONString(storealertList));
+	}
 
 }

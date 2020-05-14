@@ -68,6 +68,23 @@ public class StoredetailBiz extends BaseBiz<Storedetail> implements IStoredetail
 		}
 		return storeName;
 	}
+	
+	/**
+	 * 获取库存预警列表
+	 * @return
+	 */
+//	@Override
+//	public List<Storealert> getStorealertList() {
+//		return null;
+//		return storedetailDao.getStorealertList();
+//	}
+	/**
+	 * 发送库存预警邮件
+	 */
+	@Override
+	public void sendStorealertMail() {
+		
+	}
 	  
 	
 }

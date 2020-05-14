@@ -22,8 +22,14 @@ $(function(){
 	}
 	//采购订单查询
 	if(Request['oper'] == 'orders'){
-		url +="?t1.type=1";
-		document.title="采购订单查询";
+		if(Request['type']*1 == 1){
+			url +="?t1.type=1";
+			document.title="采购订单查询";
+		}
+		if(Request['type']*1 == 2){
+			url +="?t1.type=2";
+			document.title="销售订单查询";
+		}
 	}
 	//如果审核业务，加上state=0，只查询出未审核的订单
 	if(Request['oper'] == 'doCheck'){
@@ -91,26 +97,32 @@ $(function(){
 	});
 	
 	//添加审核按钮
+	var toolbar = new Array();
 	if(Request['oper'] == 'doCheck'){
-		$('#ordersDlg').dialog({
-			toolbar:[{
-				text:'审核',
-				iconCls:'icon-search',
-				handler:doCheck
-			}]
+		toolbar.push({
+			text:'审核',
+			iconCls:'icon-search',
+			handler:doCheck
 		});
 	}
 	
 	//添加审核按钮
 	if(Request['oper'] == 'doStart'){
-		$('#ordersDlg').dialog({
-			toolbar:[{
-				text:'确认',
-				iconCls:'icon-search',
-				handler:doStart
-			}]
+		toolbar.push({
+			text:'确认',
+			iconCls:'icon-search',
+			handler:doStart
 		});
 	}
+	//添加导出按钮
+	toolbar.push({
+		text:'导出',
+		iconCls:'icon-excel',
+		handler:doExport
+	});
+	$('#ordersDlg').dialog({
+		toolbar:toolbar
+	});
 	//添加双击事件
 	if(Request['oper'] == 'doInStore' ||  Request['oper'] == 'doOutStore'){
 		$('#itemgrid').datagrid({
@@ -163,7 +175,7 @@ $(function(){
 		height:400,
 		modal:true,
 		closed:true
-	});
+	});	
 });
 
 /**
@@ -366,5 +378,9 @@ function getColumns(){
 		  		    {field:'waybillsn',title:'运单号',width:100}
 				]];
 	}
+}
+
+function doExport(){
+	$.download("orders_export",{"id":$('#uuid').html()});
 }
 	

@@ -1,12 +1,20 @@
-package cn.itcast.erp.action;
+ package cn.itcast.erp.action;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.alibaba.fastjson.JSON;
 
 import cn.itcast.erp.biz.IOrdersBiz;
+import cn.itcast.erp.biz.impl.SupplierBiz;
 import cn.itcast.erp.entity.Emp;
 import cn.itcast.erp.entity.Orderdetail;
 import cn.itcast.erp.entity.Orders;
+import cn.itcast.erp.entity.Supplier;
 import cn.itcast.erp.exception.ErpException;
 
 /**
@@ -118,4 +126,27 @@ public class OrdersAction extends BaseAction<Orders> {
 		super.listByPage();
 		
 	}
+	
+	public void export() {
+//		String filename= "";
+//		if(Orders.TYPE_IN.equals(getT1().getType())) {
+//			filename= "采购订单";
+//		}
+//		if(Orders.TYPE_OUT.equals(getT1().getType())) {
+//			filename= "销售订单";
+//		}
+		String filename ="Orders_"+ getId() + ".xls";
+		HttpServletResponse response = ServletActionContext.getResponse();
+		try {
+			//设置输出流，实现下载文件
+			response.setHeader("Content-Disposition", "attachment;filename="+new String(filename.getBytes(),"ISO-8859-1"));
+			ordersBiz.export(response.getOutputStream(), getId());
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 }

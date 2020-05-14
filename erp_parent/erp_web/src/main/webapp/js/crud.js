@@ -18,6 +18,20 @@ $(function(){
 				//关闭编辑窗口
 				$('#editDlg').dialog('open');
 			}
+		},'-',{
+			text: '导出',
+			iconCls: 'icon-excel',
+			handler: function(){
+				var formData = $('#searchForm').serializeJSON();
+				//下载文件
+				$.download(name + "_export" + listParam,formData);
+			}
+		},'-',{
+			text: '导入',
+			iconCls: 'icon-save',
+			handler: function(){
+				$('#importDlg').dialog('open');
+			}
 		}]
 	});
 
@@ -68,7 +82,42 @@ $(function(){
 			}
 		});
 	});
-
+	
+	//判断是否有导入的功能
+	var importForm = document.getElementById('importForm');
+	if(importForm){
+		$('#importDlg').dialog({
+			title:'导入数据',
+			width:330,
+			height:106,
+			modal:true,
+			closed:true,
+			buttons:[
+			    {
+			    	text: '导入',
+			    	handler:function(){
+			    		$.ajax({
+			    			url: name + '_doImport',
+			    			data:new FormData($('#importForm')[0]),
+			    			type:'post',
+			    			processData:false,
+			    			contentType:false,
+			    			dataType:'json',
+			    			success:function(rtn){
+			    				$.messager.alert('提示',rtn.message,'info',function(){
+			    					if(rtn.success){
+			    						$('#importDlg').dialog('close');
+			    						$('#importForm').form('clear');
+			    						$('#grid').datagrid('reload');
+			    					}
+			    				});
+			    			}
+			    		});
+			    	}
+			    }
+			]
+		});
+	}
 });
 
 

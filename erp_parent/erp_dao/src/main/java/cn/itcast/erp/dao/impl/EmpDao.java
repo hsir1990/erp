@@ -7,6 +7,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import cn.itcast.erp.dao.IEmpDao;
 import cn.itcast.erp.entity.Emp;
+import cn.itcast.erp.entity.Menu;
 /**
  * 员工数据访问类
  * @author Administrator
@@ -88,6 +89,17 @@ public class EmpDao extends BaseDao<Emp> implements IEmpDao {
 	public void updatePwd(Long uuid, String newPwd) {
 		String hql = "update Emp set pwd=? where uuid=?";
 		this.getHibernateTemplate().bulkUpdate(hql, newPwd, uuid);
+	}
+
+	/**
+	 * 查询用户下的菜单权限
+	 * @param uuid
+	 * @return
+	 */
+	@Override
+	public List<Menu> getMenusByEmpuuid(Long uuid) {
+		String hql = "select m from Emp e join e.roles r join r.menus m where e.uuid=?";
+		return (List<Menu>) this.getHibernateTemplate().find(hql, uuid);
 	}
 
 }

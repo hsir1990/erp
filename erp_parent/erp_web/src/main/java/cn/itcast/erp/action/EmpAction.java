@@ -1,6 +1,12 @@
 package cn.itcast.erp.action;
+import java.util.List;
+
+import com.alibaba.fastjson.JSON;
+
 import cn.itcast.erp.biz.IEmpBiz;
 import cn.itcast.erp.entity.Emp;
+import cn.itcast.erp.entity.Menu;
+import cn.itcast.erp.entity.Tree;
 
 /**
  * 员工Action 
@@ -66,5 +72,39 @@ public class EmpAction extends BaseAction<Emp> {
 			e.printStackTrace();
 			ajaxReturn(false, "重置密码失败");
 		}
+	}
+
+	private String checkedStr;//勾选中角色的ID字符串，以逗号分割
+	public String getCheckedStr() {
+		return checkedStr;
+	}
+
+	public void setCheckedStr(String checkedStr) {
+		this.checkedStr = checkedStr;
+	}
+
+	//获取用户角色
+	public void readEmpRoles() {
+		List<Tree> roleList = empBiz.readEmpRoles(getId());
+		write(JSON.toJSONString(roleList));
+	}
+	
+	public void updateEmpRoles() {
+		try {
+			empBiz.updateEmpRoles(getId(), checkedStr);
+			ajaxReturn(true, "更新角色菜单成功");
+		} catch (Exception e) {
+			ajaxReturn(false, "更新角色菜单失败");
+			e.printStackTrace();
+		}
+	}
+	
+	//获取用户的菜单权限
+	public void getMenusByEmpuuid() {
+		if(null !=getLoginUser()) {
+			List<Menu> menusList = empBiz.getMenusByEmpuuid(getLoginUser().getUuid());
+			write(JSON.toJSONString(menusList));
+		}
+		
 	}
 }

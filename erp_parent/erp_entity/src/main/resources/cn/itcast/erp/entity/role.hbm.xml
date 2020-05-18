@@ -9,5 +9,10 @@
 
         <property name="name" /> 
  
+ 		<!-- 多对多关联配置， 角色权限中间表 role_menu -->
+ 		<bag name="menus" order-by="menuuuid" table="role_menu">
+ 			<key column="roleuuid"></key>
+ 			<many-to-many class="cn.itcast.erp.entity.Menu" column="menuuuid"></many-to-many>
+ 		</bag>
     </class>
 </hibernate-mapping>

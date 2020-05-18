@@ -6,6 +6,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.ServletActionContext;
 
 import com.alibaba.fastjson.JSON;
@@ -18,10 +21,10 @@ public class LoginAction {
 
 	private String username;//登陆用户名
 	private String pwd;//密码
-	private IEmpBiz empBiz;
-	public void setEmpBiz(IEmpBiz empBiz) {
-		this.empBiz = empBiz;
-	}
+//	private IEmpBiz empBiz;
+//	public void setEmpBiz(IEmpBiz empBiz) {
+//		this.empBiz = empBiz;
+//	}
 	public String getUsername() {
 		return username;
 	}
@@ -37,15 +40,24 @@ public class LoginAction {
 	
 	public void checkUser(){
 		try{
-			//查询是否存在
-			Emp loginUser = empBiz.findByUsernameAndPwd(username, pwd);
-			if(loginUser != null){
-				//记录当前登陆的用记
-				ActionContext.getContext().getSession().put("loginUser", loginUser);
-				ajaxReturn(true, "");
-			}else{
-				ajaxReturn(false, "用户名或密码不正确");
-			}
+//			//查询是否存在
+//			Emp loginUser = empBiz.findByUsernameAndPwd(username, pwd);
+//			if(loginUser != null){
+//				//记录当前登陆的用记
+//				ActionContext.getContext().getSession().put("loginUser", loginUser);
+//				ajaxReturn(true, "");
+//			}else{
+//				ajaxReturn(false, "用户名或密码不正确");
+//			}
+			//1.创建令牌，身份证明
+			UsernamePasswordToken upt = new UsernamePasswordToken(username, pwd);
+			//2.获取主题subject ： 封装当前用户的一些操作
+			Subject subject = SecurityUtils.getSubject();
+			//3.执行login
+			subject.login(upt);
+			
+			ajaxReturn(true, "");
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 			ajaxReturn(false, "登陆失败");
@@ -56,8 +68,12 @@ public class LoginAction {
 	 * 显示登陆用户名
 	 */
 	public void showName(){
-		//获取当前登陆的用户
-		Emp emp = (Emp) ActionContext.getContext().getSession().get("loginUser");
+//		//获取当前登陆的用户
+//		Emp emp = (Emp) ActionContext.getContext().getSession().get("loginUser");
+		//获取主题
+		Subject subject = SecurityUtils.getSubject();
+		//提取主角，拿到emp
+		Emp emp = (Emp)subject.getPrincipal();
 		//session是否会超时，用户是否登陆过了
 		if(null != emp){
 			ajaxReturn(true, emp.getName());
@@ -70,7 +86,9 @@ public class LoginAction {
 	 * 退出登陆
 	 */
 	public void loginOut(){
-		ActionContext.getContext().getSession().remove("loginUser");
+		//ActionContext.getContext().getSession().remove("loginUser");
+		
+		SecurityUtils.getSubject().logout();
 	}
 	
 	/**

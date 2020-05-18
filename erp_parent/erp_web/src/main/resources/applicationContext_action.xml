@@ -36,6 +36,7 @@
 	<!-- 菜单 -->
 	<bean id="menuAction" class="cn.itcast.erp.action.MenuAction" scope="prototype">
 		<property name="menuBiz" ref="menuBiz"></property>
+		<property name="empBiz" ref="empBiz"></property>
 	</bean>
 	<!-- 订单明细 -->
 	<bean id="orderdetailAction" class="cn.itcast.erp.action.OrderdetailAction" scope="prototype">
@@ -76,7 +77,7 @@
 
 	<!-- 登陆/退出 -->
 	<bean id="loginAction" class="cn.itcast.erp.action.LoginAction" scope="prototype">
-		<property name="empBiz" ref="empBiz"></property>
+		<!-- <property name="empBiz" ref="empBiz"></property> -->
 	</bean>
 	<!-- 报表 -->
 	<bean id="reportAction" class="cn.itcast.erp.action.ReportAction" scope="prototype">

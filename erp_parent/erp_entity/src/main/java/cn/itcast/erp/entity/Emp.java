@@ -1,5 +1,7 @@
 package cn.itcast.erp.entity;
 
+import java.util.List;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
@@ -27,7 +29,15 @@ public class Emp {
 //		this.depuuid = depuuid;
 //	}
 	private Dep dep;//部门
+	@JSONField(serialize=false)
+	private List<Role> role;//用户下所拥有的角色集合
 
+	public List<Role> getRole() {
+		return role;
+	}
+	public void setRole(List<Role> role) {
+		this.role = role;
+	}
 	public Dep getDep() {
 		return dep;
 	}

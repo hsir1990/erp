@@ -2,6 +2,8 @@ package cn.itcast.erp.biz.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+
 import cn.itcast.erp.biz.IOrderdetailBiz;
 import cn.itcast.erp.dao.IOrderdetailDao;
 import cn.itcast.erp.dao.IStoredetailDao;
@@ -40,6 +42,7 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 	 * @param storeuuid 仓库编号
 	 * @param empuuid 库管员编号
 	 */
+	@RequiresPermissions("采购订单入库")
 	public void doInStore(Long uuid, Long storeuuid, Long empuuid) {
 		//第一大步
 		//1.获取订单明细
@@ -114,6 +117,7 @@ public class OrderdetailBiz extends BaseBiz<Orderdetail> implements IOrderdetail
 	 * @param storeuuid 仓库编号
 	 * @param empuuid 库管员编号
 	 */
+	@RequiresPermissions("销售订单出库")
 	public void doOutStore(Long uuid, Long storeuuid, Long empuuid) {
 		//第一大步
 		//1.获取订单明细

@@ -14,5 +14,11 @@
  			<key column="roleuuid"></key>
  			<many-to-many class="cn.itcast.erp.entity.Menu" column="menuuuid"></many-to-many>
  		</bag>
+ 		
+ 		<!-- 反查，角色下有哪些用户，这些用户都拥有这个角色 -->
+ 		<bag name="emps" order-by="empuuid" table="emp_role">
+ 			<key column="roleuuid"></key>
+ 			<many-to-many class="cn.itcast.erp.entity.Emp" column="empuuid"></many-to-many>
+ 		</bag>
     </class>
 </hibernate-mapping>

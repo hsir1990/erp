@@ -21,9 +21,9 @@
  		<many-to-one name="dep" class="cn.itcast.erp.entity.Dep" column="depuuid"></many-to-one>
  
  		<!-- 多对多关联：用户角色中间表 -->
- 		<bag name="role" order-by="roleuuid" table="emp_role">
+ 		<bag name="role"  table="emp_role">
  			<key column="empuuid"></key>
- 			<many-to-many class="cn.itcast.erp.entity.Emp" column="roleuuid"></many-to-many>
+ 			<many-to-many class="cn.itcast.erp.entity.Role" column="roleuuid"></many-to-many>
  		</bag>
     </class>
 </hibernate-mapping>

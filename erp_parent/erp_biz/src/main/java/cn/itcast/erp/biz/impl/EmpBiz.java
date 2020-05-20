@@ -2,7 +2,11 @@ package cn.itcast.erp.biz.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JDialog;
+
 import org.apache.shiro.crypto.hash.Md5Hash;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.itcast.erp.biz.IEmpBiz;
 import cn.itcast.erp.dao.IEmpDao;
@@ -13,6 +17,7 @@ import cn.itcast.erp.entity.Menu;
 import cn.itcast.erp.entity.Role;
 import cn.itcast.erp.entity.Tree;
 import cn.itcast.erp.exception.ErpException;
+import redis.clients.jedis.Jedis;
 /**
  * 员工业务逻辑类
  * @author Administrator
@@ -25,15 +30,18 @@ public class EmpBiz extends BaseBiz<Emp> implements IEmpBiz {
 	private IEmpDao empDao;
 	private IRoleDao roleDao;
 	private IMenuDao menuDao;
+	private Jedis jedis;
 	
+	
+	public void setJedis(Jedis jedis) {
+		this.jedis = jedis;
+	}
 	public void setMenuDao(IMenuDao menuDao) {
 		this.menuDao = menuDao;
 	}
-
 	public void setRoleDao(IRoleDao roleDao) {
 		this.roleDao = roleDao;
 	}
-
 	public void setEmpDao(IEmpDao empDao) {
 		this.empDao = empDao;
 		super.setBaseDao(this.empDao);
@@ -97,8 +105,7 @@ public class EmpBiz extends BaseBiz<Emp> implements IEmpBiz {
 	}
 	
 	
-	/**
-	 * 加密
+	/**加密加盐
 	 * @param source
 	 * @param salt
 	 * @return
@@ -147,6 +154,15 @@ public class EmpBiz extends BaseBiz<Emp> implements IEmpBiz {
 			//设置用户角色
 			emp.getRole().add(role);
 		}
+		
+		//修改用户时，清理缓存
+		try {
+			//清楚缓存中当前用户的菜单权限，为了让它重新从数据库获取最新的权限信息
+			jedis.del("menuList_" + uuid);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -156,8 +172,25 @@ public class EmpBiz extends BaseBiz<Emp> implements IEmpBiz {
 	 */
 	@Override
 	public List<Menu> getMenusByEmpuuid(Long uuid) {
+		//1.尝试着从缓存里取出menuList,Jedis不支持对象的储存，支持字符串的储存，所以，当第一次存入缓存的时候，转成JSON字符串存进去
+		String menuListJson = jedis.get("menuList_"+uuid);
+		List<Menu> menuList = null;
+		if(null != menuListJson) {
+			System.out.println("从缓存中取出menuList");
+			//3.缓存中已经存在,取出后再转成List对象
+			menuList = JSON.parseArray(menuListJson, Menu.class);
+		}else {
+			//第一查询
+			//2.Jedis不支持对象的储存，支持字符串的储存，所以，当第一次存入缓存的时候，转成JSON字符串存进入
+			
+			System.out.println("从数据库中查询出menuList");
+			menuList = empDao.getMenusByEmpuuid(uuid);
+			jedis.set("menuList_"+uuid ,JSON.toJSONString(menuList));
+		}
+		return menuList;
 		
-		return empDao.getMenusByEmpuuid(uuid);
+		
+//		return empDao.getMenusByEmpuuid(uuid);
 	}
 	
 	/**

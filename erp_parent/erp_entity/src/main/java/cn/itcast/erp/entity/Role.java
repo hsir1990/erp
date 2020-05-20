@@ -14,7 +14,16 @@ public class Role {
 
 	@JSONField(serialize=false)
 	private List<Menu> menus;//角色下的菜单权限
+	@JSONField(serialize=false)
+	private List<Emp> emps;//属于这个角色下的用户集合
 	
+	
+	public List<Emp> getEmps() {
+		return emps;
+	}
+	public void setEmps(List<Emp> emps) {
+		this.emps = emps;
+	}
 	public List<Menu> getMenus() {
 		return menus;
 	}

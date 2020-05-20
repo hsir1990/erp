@@ -17,6 +17,9 @@ import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 
 import cn.itcast.erp.biz.IOrdersBiz;
 import cn.itcast.erp.dao.IEmpDao;
@@ -50,6 +53,22 @@ public class OrdersBiz extends BaseBiz<Orders> implements IOrdersBiz {
 	}
 	
 	public void add(Orders orders) {
+		Subject subject = SecurityUtils.getSubject();
+		//采购订单申请
+		if(Orders.TYPE_IN.equals(orders.getType())) {
+			//代码级别的权限控制
+			//判断当前登录的用户是否有  采购订单申请的权限
+			if(!subject.isPermitted("采购订单申请")) {
+				throw new ErpException("权限不足");
+			};
+		}else if(Orders.TYPE_OUT.equals(orders.getType())) {
+			if(!subject.isPermitted("销售订单录入")) {
+				throw new ErpException("权限不足");
+			};
+		}else {
+			throw new ErpException("非法参数");
+		}
+		
 		//1设置订单的状态
 		orders.setState(Orders.STATE_CREATE);
 //		//2订单类型
@@ -141,6 +160,7 @@ public class OrdersBiz extends BaseBiz<Orders> implements IOrdersBiz {
 
 	//审核 uuid 订单编号  empUuid审核员
 	@Override
+	@RequiresPermissions("采购订单审核")
 	public void doCheck(Long uuid, Long empUuid) {
 		//获取订单,进入持久化的状态
 		Orders orders = ordersDao.get(uuid);
@@ -159,6 +179,7 @@ public class OrdersBiz extends BaseBiz<Orders> implements IOrdersBiz {
 
 	//确认 uuid 订单编号  empUuid采购员
 	@Override
+	@RequiresPermissions("采购订单确认")
 	public void doStart(Long uuid, Long empUuid) {
 		//获取订单,进入持久化的状态
 		Orders orders = ordersDao.get(uuid);

@@ -5,9 +5,11 @@ import java.util.List;
 import cn.itcast.erp.biz.IRoleBiz;
 import cn.itcast.erp.dao.IMenuDao;
 import cn.itcast.erp.dao.IRoleDao;
+import cn.itcast.erp.entity.Emp;
 import cn.itcast.erp.entity.Menu;
 import cn.itcast.erp.entity.Role;
 import cn.itcast.erp.entity.Tree;
+import redis.clients.jedis.Jedis;
 /**
  * 角色业务逻辑类
  * @author Administrator
@@ -17,7 +19,12 @@ public class RoleBiz extends BaseBiz<Role> implements IRoleBiz {
 
 	private IRoleDao roleDao;
 	private IMenuDao menuDao;
+	private Jedis jedis;
 	
+	public void setJedis(Jedis jedis) {
+		this.jedis = jedis;
+	}
+
 	public void setMenuDao(IMenuDao menuDao) {
 		this.menuDao = menuDao;
 	}
@@ -47,8 +54,8 @@ public class RoleBiz extends BaseBiz<Role> implements IRoleBiz {
 			//二级菜单
 			for(Menu m2 : m.getMenus()) {
 				t2 = new Tree();
-				t2.setId(m.getMenuid());
-				t2.setText(m.getMenuname());
+				t2.setId(m2.getMenuid());
+				t2.setText(m2.getMenuname());
 				//如果角色下包含这个权限菜单，让它勾选上
 				if(roleMenus.contains(m2)) {
 					t2.setChecked(true);
@@ -79,6 +86,19 @@ public class RoleBiz extends BaseBiz<Role> implements IRoleBiz {
 			role.getMenus().add(menu);
 		}
 		
+		
+		//1.通过角色,反查询属于这个角色有哪些用户
+		List<Emp> empList = role.getEmps();
+		//2.清除这些用户的菜单权限缓存
+		try {
+			for(Emp emp:empList) {
+				//清除每个用户的菜单权限缓存
+				jedis.del("menuList_" + emp.getUuid());
+			}
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 	}
 	
 }

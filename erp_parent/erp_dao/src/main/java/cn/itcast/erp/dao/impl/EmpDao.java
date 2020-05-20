@@ -98,7 +98,7 @@ public class EmpDao extends BaseDao<Emp> implements IEmpDao {
 	 */
 	@Override
 	public List<Menu> getMenusByEmpuuid(Long uuid) {
-		String hql = "select m from Emp e join e.roles r join r.menus m where e.uuid=?";
+		String hql = "select m from Emp e join e.role r join r.menus m where e.uuid=?";
 		return (List<Menu>) this.getHibernateTemplate().find(hql, uuid);
 	}
 

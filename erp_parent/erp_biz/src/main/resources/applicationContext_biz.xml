@@ -21,6 +21,7 @@
 		<property name="empDao" ref="empDao"></property>
 		<property name="roleDao" ref="roleDao"></property>
 		<property name="menuDao" ref="menuDao"></property>
+		<property name="jedis" ref="jedis"></property>
 	</bean>
 	<!-- 商品 -->
 	<bean id="goodsBiz" class="cn.itcast.erp.biz.impl.GoodsBiz">
@@ -62,6 +63,7 @@
 	<bean id="roleBiz" class="cn.itcast.erp.biz.impl.RoleBiz">
 		<property name="roleDao" ref="roleDao"></property>
 		<property name="menuDao" ref="menuDao"></property>
+		<property name="jedis" ref="jedis"></property>
 	</bean>
 	<!-- 仓库 -->
 	<bean id="storeBiz" class="cn.itcast.erp.biz.impl.StoreBiz">

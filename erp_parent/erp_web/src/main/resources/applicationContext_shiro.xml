@@ -8,11 +8,12 @@
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<!-- 安全管理器，shiro核心组件(大脑) Facade模式 -->
 		<property name="securityManager" ref="securityManager" />
-		<!-- <property name="filters">
+		<!-- 自定义过滤器 -->
+		<property name="filters">
 			<map>
 				<entry key="perms" value-ref="erpAuthorizationFilter"></entry>
 			</map>
-		</property> -->
+		</property>
 		<!-- 用户如果没有登陆，当他在访问资源的时候，就会自动跳转到登陆的页面 -->
 		<property name="loginUrl" value="/login.html" />
 		<!-- 当用户没有访问某项资源权限的时候，跳转到该页面 -->
@@ -24,6 +25,8 @@
 				/login_*.action = anon
 				/login_*=anon
 				
+				
+				/*_list=perms[]
 				/dep_*=perms["部门"]
 				/supplier.html=perms["供应商管理","客户管理"]
 				/supplier_*=perms["供应商管理","客户管理"]
@@ -62,6 +65,21 @@
 	<bean id="erpRealm" class="cn.itcast.erp.realm.ErpRealm">
 		<property name="empBiz" ref="empBiz"></property>
 	</bean>
-
-	<!--<bean id="erpAuthorizationFilter" class="cn.itcast.erp.filter.ErpAuthorizationFilter"></bean>-->
+	<!-- 自定义过滤器 -->
+	<bean id="erpAuthorizationFilter" class="cn.itcast.erp.filter.ErpAuthorizationFilter"></bean>
+	
+	<!-- 启动shiro注解 -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+			depends-on="lifecycleBeanPostProcessor" >
+		<!-- 默认使用JDK代理 ，如被代理类没有实现接口，必须使用下列配置开启 cglib代理  -->
+		<property name="proxyTargetClass" value="true" />
+	</bean>	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+	
+	<!-- 对安全管理器 增强代码 ， spring 后处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/> 
 </beans>

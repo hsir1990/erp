@@ -32,6 +32,8 @@ public class Emp {
 	@JSONField(serialize=false)
 	private List<Role> role;//用户下所拥有的角色集合
 
+
+	
 	public List<Role> getRole() {
 		return role;
 	}

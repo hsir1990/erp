@@ -1,5 +1,7 @@
 package cn.itcast.erp.realm;
 
+import java.util.List;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -12,6 +14,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 import cn.itcast.erp.biz.IEmpBiz;
 import cn.itcast.erp.entity.Emp;
+import cn.itcast.erp.entity.Menu;
+import redis.clients.jedis.Jedis;
 
 public class ErpRealm extends AuthorizingRealm {
 	private IEmpBiz empBiz;
@@ -27,8 +31,22 @@ public class ErpRealm extends AuthorizingRealm {
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		System.out.println("执行了授权的方法。。。。。。");
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addStringPermission("部门");
-		return null;
+//		info.addStringPermission("部门");
+		
+		
+		
+		
+		
+		Emp emp = (Emp)principals.getPrimaryPrincipal();
+		//获取当前登陆用户的菜单权限
+		List<Menu> menuList = empBiz.getMenusByEmpuuid(emp.getUuid());
+		//加入授权
+		for(Menu m : menuList) {
+			//这里我们使用menuname来做授权里的key值，那么在配置授权访问的url=perms[菜单名称]
+			info.addStringPermission(m.getMenuname());
+		}
+		
+		return info;
 	}
 
 	/**
